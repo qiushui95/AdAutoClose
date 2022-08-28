@@ -16,10 +16,20 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("key"){
+            keyAlias = "yang"
+            keyPassword = "Ycx12345."
+            storePassword = "Ycx12345."
+            storeFile = file("ycx.jks")
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig= signingConfigs["key"]
         }
     }
     compileOptions {
