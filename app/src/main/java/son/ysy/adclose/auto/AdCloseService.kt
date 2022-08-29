@@ -16,15 +16,26 @@ internal class AdCloseService : AccessibilityService() {
         }
     }
 
+    private var lastClickTime = 0L
+
     private fun onViewChanged() {
 
         val rootNode = rootInActiveWindow ?: return
 
+        if (System.currentTimeMillis() - lastClickTime < 1000) return
+
         val closeButtons = mutableListOf<AccessibilityNodeInfo>()
 
         closeButtons.addAll(rootNode.findAccessibilityNodeInfosByViewId("com.dragon.read:id/aro"))
+        closeButtons.addAll(rootNode.findAccessibilityNodeInfosByViewId("com.dragon.read:id/a3v"))
 
-        closeButtons.forEach {
+        val needClickNode = closeButtons.filter { it.isClickable }
+
+        if (needClickNode.isNotEmpty()) {
+            lastClickTime = System.currentTimeMillis()
+        }
+
+        needClickNode.forEach {
             it.performAction(AccessibilityNodeInfo.ACTION_CLICK)
         }
     }
